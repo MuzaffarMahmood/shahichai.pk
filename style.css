@@ -1,0 +1,157 @@
+body {
+	font-family: Arial, sans-serif;
+	background-color: #FFD700; 
+}
+footer {
+	color: #000;
+	padding: 20px 0;
+	text-align: center;
+}
+
+/* Full-Screen Menu Overlay */
+.overlay {
+	height: 100%;
+	width: 0;
+	position: fixed;
+	z-index: 1;
+	top: 0;
+	left: 0;
+	background-color: #000;
+	overflow-x: hidden;
+	transition: 0.5s;
+}
+
+.overlay a {
+	padding: 8px;
+	text-decoration: none;
+	font-size: 36px;
+	color: #FFD700;
+	display: block;
+	transition: 0.3s;
+	text-align: center;
+	margin-top: 50px;
+}
+
+.overlay a:hover {
+	color: #ffffff;
+}
+
+.overlay .closebtn {
+	position: absolute;
+	top: 20px;
+	right: 45px;
+	font-size: 60px;
+	color: #FFD700;
+}
+
+.menu-icon {
+	font-size: 30px;
+	cursor: pointer;
+}
+/* Navbar styles */
+.navbar-brand {
+	font-weight: bold;
+	font-size: 1.8em;
+	color: #D48806; /* Golden Yellow for the brand name */
+}
+.nav-link {
+	color: #000 !important;
+}
+.cart-icon {
+	position: relative;
+	display: inline-block;
+}
+.cart-count {
+	position: absolute;
+	top: -5px;
+	right: -10px;
+	background-color: #000;
+	border-radius: 50%;
+	padding: 2px 5px;
+	font-size: 12px;
+	color: #fff;
+}
+.logo {
+	width: 150px;
+}
+/* Hero Section */
+.hero-section {
+	background-image: url('https://via.placeholder.com/1500x400/FFD700/FFFFFF?text=Buy+Premium+Dry+Fruits+Online');
+	background-size: cover;
+	background-position: center;
+	padding: 100px 0;
+	text-align: center;
+	color: #FFF;
+}
+.hero-section h1 {
+	font-size: 3.5rem;
+	font-weight: bold;
+	color: #4A3D19;
+}
+.hero-section p {
+	font-size: 1.5rem;
+	margin-bottom: 30px;
+	color: #4A3D19;
+}
+.btn-yellow {
+	background-color: #FFC100;
+	border-radius: 0;
+	color: #4A3D19;
+	margin: 10px;
+}
+.btn-yellow:hover {
+	background-color: #fab000;
+}
+/* Product Cards */
+.product-card img {
+	width: 100%;
+	height: auto; /* Allow height to adjust based on width */
+	object-fit: cover;
+}
+.product-card {
+	border: 1px solid #FFD700;
+	transition: transform 0.2s; /* Add a slight zoom effect */
+}
+.product-card:hover {
+	transform: scale(1.05); /* Slightly enlarge the card on hover */
+}
+.card-title {
+	color: #D48806;
+}
+
+
+.cart-item {
+	border-bottom: 1px solid #D48806;
+	padding: 15px 0;
+	display: flex;
+	align-items: center;
+}
+.cart-item img {
+	width: 80px;
+	height: 80px;
+	object-fit: cover;
+	margin-right: 15px;
+}
+.remove-item {
+	color: #D48806;
+	cursor: pointer;
+	font-weight: bold;
+	margin-left: auto;
+}
+.remove-item:hover {
+	color: red;
+}
+
+.checkout-form {
+	display: none;
+	margin: 20px;
+	background-color: #FFF8E1;
+	padding: 20px;
+	border-radius: 5px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.checkout-form h4 {
+	margin-bottom: 15px;
+}
+
+.error { color: red; }
