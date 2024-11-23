@@ -25,7 +25,9 @@ h2 {
 .header img {
 	width: 150px;
 }
-
+.mitem {
+	padding: 10px;
+}
 /* Hero Section */
 .hero {
 	text-align: center;
