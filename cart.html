@@ -94,7 +94,22 @@
 		function openNav() {
             document.getElementById("myNav").style.width = "100%";
         }
-
+		function sendWhatsAppMessage(event) {
+			event.preventDefault();
+            // The WhatsApp number in international format (without '+' or '00', e.g. 923001234567 for Pakistan)
+            //var phoneNumber = "+923137613439"; 
+            // Message to be sent
+            // WhatsApp URL
+            //var url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
+			//var url = "https://api.whatsapp.com/send/?phone=" + encodeURIComponent(phoneNumber) + "&text=" + encodeURIComponent(message) + "&type=phone_number&app_absent=0";
+            // Open WhatsApp URL in a new tab
+            // Open WhatsApp URL in a new tab
+            //window.open(url, '_blank');
+            let message = `Salam, I want to know more about Shahi Chai.`; 
+			const whatsappNumber = "+923137613439";
+			const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+			window.open(whatsappLink, '_blank');
+        }
         function closeNav() {
             document.getElementById("myNav").style.width = "0%";
         }		
