@@ -35,7 +35,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Shahi Chai - A Royal Blend</h1>
+            <h1>Shahi Chai - Premium Quality Tea in Pakistan</h1>
             <p>Indulge in the finest black tea, crafted for royalty</p>
             <a target="_blank" onclick="sendWhatsAppMessage(event)" class="cta-btn">WhatsApp</a>
         </div>
@@ -58,28 +58,45 @@
                     <div class="mb-3">
                         <label for="name" class="form-label">Name</label>
                         <input type="text" class="form-control" id="name" required>
-						<span id="nameError" class="error"></span><br><br>
+						<span id="nameError" class="error"></span>
                     </div>
                     <div class="mb-3">
                         <label for="phone" class="form-label">Phone Number</label>
                         <input type="tel" class="form-control" id="phone" required>
-						<span id="phoneError" class="error"></span><br><br>
+						<span id="phoneError" class="error"></span>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Address</label>
                         <textarea class="form-control" id="address" rows="3" required></textarea>
-						<span id="addressError" class="error"></span><br><br>
+						<span id="addressError" class="error"></span>
                     </div>
-                    <button type="submit" class="btn btn-yellow">Place Order</button>
-                </form>
+					<div class="mb-3">
+						<label for="paymentmethod" class="form-check-label">Payment Method</label></br>
+						<input type="radio" class="form-check-input" id="paymentmethod" checked>
+						Cash On Delivery
+						<span id="paymentmethodError" class="error"></span>
+					</div>
+                    <!-- Terms and Conditions Checkbox -->
+					<div class="mb-3">
+						<label class="form-check-label">
+							<input type="checkbox" class="form-check-input" id="agreeTerms" required>
+							I agree to the <a href="terms-and-conditions.html" target="_blank">Terms and Conditions</a>
+						</label>
+						<span id="termsError" class="error"></span>
+					</div>
+
+					<!-- Place Order Button (disabled by default) -->
+					<button type="submit" class="btn btn-yellow" id="placeOrderButton" disabled>Place Order</button>
+				</form>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer Section -->
     <footer>
         <div class="container">
             <p>&copy; 2024 shahichai.pk | All Rights Reserved.</p>
+            <p>Follow us on: <a target="_blank" href="https://www.facebook.com/shahichai.pk" style="text-decoration-line: none;color: white;">Facebook</a> | <a target="_blank" href="https://www.instagram.com/shahi.chai" style="text-decoration-line: none;color: white;">Instagram</a></p>
         </div>
     </footer>
 
@@ -89,6 +106,24 @@
     <script>
 		let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
         let cartCount = localStorage.getItem('cartCount') || 0;
+		// Add event listener for the checkbox
+		document.getElementById('agreeTerms').addEventListener('change', function() {
+			const placeOrderButton = document.getElementById('placeOrderButton');
+			placeOrderButton.disabled = !this.checked; // Enable/Disable button based on checkbox
+		});
+
+		// Ensure the button is enabled if the checkbox is checked when the page loads
+		window.onload = function() {
+			const checkbox = document.getElementById('agreeTerms');
+			const placeOrderButton = document.getElementById('placeOrderButton');
+			placeOrderButton.disabled = !checkbox.checked; // Set button state on page load
+		}
+
+		// Additional validation to allow space in phone number
+		document.getElementById('phone').addEventListener('input', function() {
+			const phoneInput = this;
+			phoneInput.value = phoneInput.value.replace(/[^0-9\s+]/g, ''); // Allow only numbers, spaces, and the plus sign
+		});
 
         document.getElementById('cart-count').innerText = cartCount;
 		function openNav() {
@@ -105,6 +140,7 @@
             // Open WhatsApp URL in a new tab
             // Open WhatsApp URL in a new tab
             //window.open(url, '_blank');
+			// https://api.whatsapp.com/send?phone=923270106633&text=Hello
             let message = `Salam, I want to know more about Shahi Chai.`; 
 			const whatsappNumber = "+923137613439";
 			const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
@@ -209,7 +245,7 @@
                 valid = false;
             }
 
-            const phoneRegex = /^\+?\d{1,14}$/; // + optional, followed by 1 to 13 digits
+            const phoneRegex = /^[+]?[0-9\s]{7,15}$/;
             if (!phoneRegex.test(phone)) {
                 document.getElementById('phoneError').textContent = 'Please enter a valid phone number.';
                 valid = false;
@@ -234,8 +270,8 @@
 				message += `\nTotal: PKR ${total}`;
 
 				const whatsappNumber = "+923137613439"; // Replace with your WhatsApp number
-				const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
-				
+				const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
+				//https://api.whatsapp.com/send?phone=923270106633&text=Hello
 				// Redirect to WhatsApp
 				window.open(whatsappLink, '_blank');
 				clearCart(); // Optional: Clear cart after checkout
