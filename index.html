@@ -125,7 +125,7 @@
 	
     <script>
         let cartCount = 0; // Initialize cart item count
-        let cartItems = []; // Array to store cart items
+        let cartItems = {}; // Array to store cart items
 		function openNav() {
             document.getElementById("myNav").style.width = "100%";
         }
@@ -134,11 +134,16 @@
             document.getElementById("myNav").style.width = "0%";
         }
         function addToCart(itemName, itemPrice) {
-            cartCount++; // Increment the cart count
-            cartItems.push({ name: itemName, price: itemPrice }); // Add item to cart array
-            document.getElementById('cart-count').innerText = cartCount; // Update cart display
-            localStorage.setItem('cartCount', cartCount); // Store in localStorage
-            localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Store cart items in localStorage
+		debugger;
+			if(cartItems[itemName]) {
+				cartItems[itemName].quantity++;
+			} else {
+				cartItems[itemName] = { price: itemPrice, quantity: 1 };
+				cartCount++;
+			}
+			document.getElementById('cart-count').innerText = cartCount; // Update cart display
+			localStorage.setItem('cartCount', cartCount); // Store in localStorage
+			localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Store cart items in localStorage			
         }
 
         // Load cart count from localStorage on page load

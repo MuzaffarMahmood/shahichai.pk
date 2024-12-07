@@ -154,53 +154,67 @@
         }		
         function loadCart() {
             const cartCount = localStorage.getItem('cartCount') || 0;
-            document.getElementById('cart-count').innerText = cartCount;
-            const cartItemsDiv = document.getElementById('cart-items');
-            const emptyCartMessage = document.getElementById('empty-cart-message');
-            const totalPriceDiv = document.getElementById('total-price');
-            const grandTotalPriceDiv = document.getElementById('grand-total-price');
-            //const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
-			totalPriceDiv.style.textAlign = 'right';
+			document.getElementById('cart-count').innerText = cartCount;
+			const cartItemsDiv = document.getElementById('cart-items');
+			const emptyCartMessage = document.getElementById('empty-cart-message');
+			const continueShoppingButton = document.getElementById('continue-shopping-button');
+			const checkoutButton = document.getElementById('checkout-button');
+			const dcPriceDiv = document.getElementById('dc-price');
+			const totalPriceDiv = document.getElementById('total-price');
+			const grandTotalPriceDiv = document.getElementById('grand-total-price');
+			const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 
-            if (cartCount == 0) {
-                emptyCartMessage.style.display = 'block';
-				document.getElementById('continue-shopping-button').style.display = 'block'; 
-				document.getElementById('checkout-button').style.display = 'none';
+			if (cartCount == 0) {
+				emptyCartMessage.style.display = 'block';
+				continueShoppingButton.style.display = 'block';
+				checkoutButton.style.display = 'none';
+				dcPriceDiv.style.display = 'none';
 				totalPriceDiv.innerText = '';
-                grandTotalPriceDiv.innerText = '';
-            } else {
-                emptyCartMessage.style.display = 'none';
-				document.getElementById('continue-shopping-button').style.display = 'none';
-				document.getElementById('dc-price').style.display = 'block'; 
-                cartItemsDiv.innerHTML = ''; // Clear previous items
-                let totalPrice = 0;
-                cartItems.forEach((item, index) => {
-                    // Set default quantity to 1 if it’s not already set
-                    item.quantity = item.quantity || 1;
+				grandTotalPriceDiv.innerText = '';
+			} else {
+				emptyCartMessage.style.display = 'none';
+				checkoutButton.style.display = 'block';
+				dcPriceDiv.style.display = 'block';
+				cartItemsDiv.innerHTML = '';
+				let totalPrice = 0;
+				for (const itemName in cartItems) {
+					if (cartItems.hasOwnProperty(itemName)) {
+						const item = cartItems[itemName];
 
-                    const itemTotalPrice = item.price * item.quantity; // Calculate total price for item
-                    totalPrice += itemTotalPrice; // Update total price for the cart
+						// Ensure price is a number (in case it's a string in your data)
+						item.price = Number(item.price);
 
-                    const itemDiv = document.createElement('div');
-                    itemDiv.classList.add('cart-item');
-                    itemDiv.innerHTML = ``;
-                    //itemDiv.innerHTML += `<img src="${item.image}" alt="${item.name}">`;
-                    itemDiv.innerHTML += `
-                        <div class="flex-grow-1">
-                            <strong>${item.name}</strong><br>
-                            Unit Price: PKR ${item.price} 
-                        </div>
-                        <div>
-                            <input type="number" value="${item.quantity}" min="1" onchange="updateQuantity(${index}, this.value)" style="width: 60px;">
-							<span class="remove-item" onclick="removeFromCart(${index})">X</span>
-                            <br>Total: PKR ${itemTotalPrice}
-                        </div>`;
-                    cartItemsDiv.appendChild(itemDiv);
-                });
+						// Set default quantity to 1 if it’s not already set
+						item.quantity = item.quantity || 1;
 
-                totalPriceDiv.innerText = `Total: PKR ${totalPrice}`;
+						// Calculate total price for the item
+						const itemTotalPrice = item.price * item.quantity;
+						totalPrice += itemTotalPrice;  // Update total price for the cart
+
+						const itemDiv = document.createElement('div');
+						itemDiv.classList.add('cart-item');
+
+						// Check if the image exists to prevent errors if no image is set
+						const itemImage = item.image ? `<img src="${item.image}" alt="${itemName}">` : '';
+
+						itemDiv.innerHTML = `
+							${itemImage}
+							<div class="flex-grow-1">
+								<strong>${itemName}</strong><br>
+								Unit Price: PKR ${item.price} 
+								<span class="remove-item" onclick="removeFromCart('${itemName}')">X</span>
+							</div>
+							<div>
+								<input type="number" value="${item.quantity}" min="1" onchange="updateQuantity('${itemName}', this.value)" style="width: 60px;">
+								<br>Total: PKR ${itemTotalPrice}
+							</div>`;
+
+						cartItemsDiv.appendChild(itemDiv);
+					}
+				}
+				totalPriceDiv.innerText = `Total: PKR ${totalPrice}`;
 				grandTotalPriceDiv.innerText = `Grand Total: PKR ${totalPrice + 200}`;
-            }
+			}
         }
 
         function updateQuantity(index, quantity) {
@@ -250,55 +264,73 @@
         }
 
         function handleCheckout(event) {
-            event.preventDefault();
-            
-			// Clear previous error messages
-            document.getElementById('nameError').textContent = '';
-            document.getElementById('phoneError').textContent = '';
-            document.getElementById('addressError').textContent = '';
-
-            const name = document.getElementById('name').value.trim();
-            const phone = document.getElementById('phone').value.trim();
-            const address = document.getElementById('address').value.trim();
-            let valid = true;
-
-            // Name validation
-            const nameRegex = /^[A-Za-z\s]+$/;
-            if (!nameRegex.test(name)) {
-                document.getElementById('nameError').textContent = 'Please enter a valid name (alphabets only).';
-                valid = false;
-            }
-
-            const phoneRegex = /^[+]?[0-9\s]{7,15}$/;
-            if (!phoneRegex.test(phone)) {
-                document.getElementById('phoneError').textContent = 'Please enter a valid phone number.';
-                valid = false;
-            }
-
-            // Address validation (alphanumeric)
-            const addressRegex = /^[A-Za-z0-9\s]+$/;
-            if (!addressRegex.test(address)) {
-                document.getElementById('addressError').textContent = 'Please enter a valid address (alphanumeric).';
-                valid = false;
-            }
-
-            // If all validations pass
-            if (valid) {
+			event.preventDefault();
+			document.getElementById('nameError').textContent = '';
+			document.getElementById('phoneError').textContent = '';
+			document.getElementById('addressError').textContent = '';
+			const name = document.getElementById('name').value.trim();
+			const phone = document.getElementById('phone').value.trim();
+			const address = document.getElementById('address').value.trim();
+			let valid = true;
+			const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+			const nameRegex = /^[A-Za-z\s]+$/;
+			if (!nameRegex.test(name)) {
+				document.getElementById('nameError').textContent = 'Please enter a valid name (alphabets only).';
+				valid = false;
+			}
+			const phoneRegex = /^\+?\d{9,13}$/;
+			if (!phoneRegex.test(phone)) {
+				document.getElementById('phoneError').textContent = 'Please enter a valid phone number.';
+				valid = false;
+			}
+			const addressRegex = /^[A-Za-z0-9\s]+$/;
+			if (!addressRegex.test(address)) {
+				document.getElementById('addressError').textContent = 'Please enter a valid address (alphanumeric).';
+				valid = false;
+			}
+			if (valid) {
 				let message = `Order Details:\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\n\nProducts:\n`;
-
-				cartItems.forEach(item => {
-					message += `${item.name} - Quantity: ${item.quantity} - Price: PKR ${item.price * item.quantity}\n`;
-				});
-
-				const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+				let items = '';
+				for (const itemName in cartItems) {
+					if (cartItems.hasOwnProperty(itemName)) {
+						const item = cartItems[itemName];
+						items += `${itemName} - Quantity: ${item.quantity} - Price: PKR ${item.price * item.quantity}\n`;
+					}
+				}
+				message += items;
+				const total = Object.values(cartItems).reduce((sum, item) => sum + (item.price * item.quantity), 0);
 				message += `\nTotal: PKR ${total}`;
-
-				const whatsappNumber = "+923137613439"; // Replace with your WhatsApp number
-				const whatsappLink = `https://api.whatsapp.com/send?phone=${whatsappNumber}&text=${encodeURIComponent(message)}`;
-				//https://api.whatsapp.com/send?phone=923270106633&text=Hello
-				// Redirect to WhatsApp
-				window.open(whatsappLink, '_blank');
-				clearCart(); // Optional: Clear cart after checkout
+				const orderData = {
+					name: name,
+					phone: phone,
+					address: address,
+					items: items,
+					total: total
+				};
+				fetch('http://localhost/mamo.pk/mamo-api/save_order.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(orderData)
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.message === 'Order placed successfully') {
+						//const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+						//window.open(whatsappLink, '_blank');
+						clearCart();
+						const checkoutForm = document.getElementById('checkout-form');
+						checkoutForm.style.display = 'none';
+						alert('Order placed successfully! Thank you for your purchase. :)');
+					} else {
+						alert('Error placing order: ' + data.message);
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('An error occurred while placing the order.');
+				});
 			}
         }
         window.onload = loadCart; // Load cart on page load
