@@ -20,7 +20,9 @@ h2 {
 	margin: 30px 0px;
 }
 h3 {
-	font-size: 16px;
+	font-size: 24px;
+	font-weight: bold;
+	margin-top: 20px;
 }
 /* Header */
 .header {
@@ -161,6 +163,27 @@ footer {
 	padding: 2px 5px;
 	font-size: 12px;
 	color: #fff;
+}
+.total-prices {
+	display: flex;
+	flex-direction: column;
+	text-align-last: right;
+}
+.checkout-btn {
+	display: block;
+	width: 100px;
+	align-self: self-end;
+    margin: 15px 0px;
+}
+.checkout-btn:focus {
+	display: block;
+    float: right;
+    clear: both;
+    margin: 15px 0px;
+}
+.center-align {
+	text-align-last: center;
+	align-self: center !important;
 }
 .logo {
 	width: 150px;

@@ -47,11 +47,15 @@
             <div id="cart-items">
                 <!-- Cart items will be displayed here -->
             </div>
-            <div class="text-center mt-4">
-                <h4 id="empty-cart-message" style="display: none;">Your cart is empty!</h4>
-                <div id="total-price" class="mt-3" style="font-weight: bold;"></div>
-                <button class="btn btn-yellow" id="checkout-button" onclick="toggleCheckout()">Checkout</button>
-            </div>
+            <div class="text-center total-prices">
+				<h4 id="empty-cart-message" class="center-align" style="display: none;">Your cart is empty!</h4>
+				<h4 id="thank-you-cart-message" class="center-align" style="display: none;">Thank you for your order!</h4>
+				<a target="_blank" href="https://shahichai.pk" class="center-align btn btn-yellow" id="continue-shopping-button" style="display: none;">Continue Shopping</a>
+				<div id="total-price" class="total-price mt-3" style="font-weight: bold;"></div>
+				<div id="dc-price" class="total-price mt-3" style="display: none;font-weight: bold;"> Delivery Charges: PKR 200</div>
+				<div id="grand-total-price" class="total-price mt-3" style="font-weight: bold;"></div>
+				<button class="btn btn-yellow checkout-btn" id="checkout-button" onclick="toggleCheckout()">Checkout</button>
+			</div>
             <div class="checkout-form" id="checkout-form">
                 <h4 class="mt-4">Checkout</h4>
                 <form id="form" onsubmit="handleCheckout(event)">
@@ -140,7 +144,6 @@
             // Open WhatsApp URL in a new tab
             // Open WhatsApp URL in a new tab
             //window.open(url, '_blank');
-			// https://api.whatsapp.com/send?phone=923270106633&text=Hello
             let message = `Salam, I want to know more about Shahi Chai.`; 
 			const whatsappNumber = "+923137613439";
 			const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
@@ -152,21 +155,25 @@
         function loadCart() {
             const cartCount = localStorage.getItem('cartCount') || 0;
             document.getElementById('cart-count').innerText = cartCount;
-
             const cartItemsDiv = document.getElementById('cart-items');
             const emptyCartMessage = document.getElementById('empty-cart-message');
             const totalPriceDiv = document.getElementById('total-price');
+            const grandTotalPriceDiv = document.getElementById('grand-total-price');
             //const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
 			totalPriceDiv.style.textAlign = 'right';
 
             if (cartCount == 0) {
                 emptyCartMessage.style.display = 'block';
-                totalPriceDiv.innerText = '';
+				document.getElementById('continue-shopping-button').style.display = 'block'; 
+				document.getElementById('checkout-button').style.display = 'none';
+				totalPriceDiv.innerText = '';
+                grandTotalPriceDiv.innerText = '';
             } else {
                 emptyCartMessage.style.display = 'none';
+				document.getElementById('continue-shopping-button').style.display = 'none';
+				document.getElementById('dc-price').style.display = 'block'; 
                 cartItemsDiv.innerHTML = ''; // Clear previous items
                 let totalPrice = 0;
-
                 cartItems.forEach((item, index) => {
                     // Set default quantity to 1 if it’s not already set
                     item.quantity = item.quantity || 1;
@@ -192,6 +199,7 @@
                 });
 
                 totalPriceDiv.innerText = `Total: PKR ${totalPrice}`;
+				grandTotalPriceDiv.innerText = `Grand Total: PKR ${totalPrice + 200}`;
             }
         }
 
@@ -212,12 +220,28 @@
         }
 
         function clearCart() {
+			debugger;
             localStorage.removeItem('cartCount'); // Clear cart in localStorage
             localStorage.removeItem('cartItems'); // Clear cart items in localStorage
             document.getElementById('cart-items').innerHTML = ''; // Clear displayed cart items
             document.getElementById('empty-cart-message').style.display = 'block'; // Show empty message
             document.getElementById('cart-count').innerText = '0'; // Reset cart count in navbar
             document.getElementById('total-price').innerText = ''; // Clear total price
+            document.getElementById('grand-total-price').innerText = ''; // Clear total price
+			
+			localStorage.removeItem('cartCount'); // Clear cart in localStorage
+			localStorage.removeItem('cartItems'); // Clear cart items in localStorage
+			document.getElementById('cart-items').innerHTML = ''; // Clear displayed cart items
+			document.getElementById('empty-cart-message').style.display = 'none'; // Show empty message
+			document.getElementById('checkout-form').style.display = 'none'; // Show empty message
+			document.getElementById('cart-count').innerText = '0'; // Reset cart count in navbar
+			document.getElementById('total-price').innerText = ''; // Clear total price
+			document.getElementById('grand-total-price').innerText = ''; // Clear total price
+			document.getElementById('checkout-button').style.display = 'none';
+			document.getElementById('thank-you-cart-message').style.display = 'block'; // Clear total price
+			document.getElementById('continue-shopping-button').style.display = 'block'; // Clear total price
+			document.getElementById('dc-price').innerText = ''; // Clear total price
+
         }
 
         function toggleCheckout() {
