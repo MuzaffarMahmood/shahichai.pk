@@ -171,6 +171,8 @@
 				dcPriceDiv.style.display = 'none';
 				totalPriceDiv.innerText = '';
 				grandTotalPriceDiv.innerText = '';
+				cartItemsDiv.innerHTML = '';
+				document.getElementById('checkout-form').style.display = 'none';
 			} else {
 				emptyCartMessage.style.display = 'none';
 				checkoutButton.style.display = 'block';
@@ -225,14 +227,30 @@
             loadCart(); // Reload the cart to recalculate total
         }
 
-        function removeFromCart(index) {
+        function removeFromCart001(index) {
             //let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
             cartItems.splice(index, 1); // Remove the item from the array
             localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Update localStorage
             localStorage.setItem('cartCount', cartItems.length); // Update cart count
             loadCart(); // Reload the cart
         }
+		function removeFromCart (name) {
+			const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+			// Check if the item exists in the cart
+			if (cartItems[name]) {
+				// Delete the item from cartItems object by its name
+				delete cartItems[name];
 
+				// Update localStorage
+				localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Update cartItems in localStorage
+				localStorage.setItem('cartCount', Object.keys(cartItems).length); // Update cart count based on number of items
+
+				// Reload the cart to recalculate total and update the display
+				loadCart();
+			} else {
+				console.error("Item not found in cart:", name);
+			}
+		}
         function clearCart() {
 			debugger;
             localStorage.removeItem('cartCount'); // Clear cart in localStorage
