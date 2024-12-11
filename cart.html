@@ -249,7 +249,7 @@
             //let cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
             cartItems[index].quantity = parseInt(quantity);
             localStorage.setItem('cartItems', JSON.stringify(cartItems)); // Update localStorage
-            localStorage.setItem('cartCount', cartItems.length); // Update cart count
+            localStorage.setItem('cartCount', Object.keys(cartItems).length); // Update cart count
             loadCart(); // Reload the cart to recalculate total
         }
 
